@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { USER_TYPE } from '../enums/UserType';
 import { createUser, fetchAllActors, fetchAllProducers } from '../redux/userSlice';
+import { USER_TYPE } from '../utils/enums';
 
 const CreateUser = ({ modalData, setModalData, user, setUser }) => {
     const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const CreateUser = ({ modalData, setModalData, user, setUser }) => {
     const handleCreateUser = async (e) => {
         e.preventDefault();
 
-        await dispatch(createUser({ data: { ...user, type: modalData.type }, setModalData: () => setModalData({ open: false }) }));
+        dispatch(createUser({ data: { ...user, type: modalData.type }, setModalData: () => setModalData({ open: false }) }));
         dispatch(modalData.type === USER_TYPE.PRODUCER ? fetchAllProducers() : fetchAllActors())
     }
 

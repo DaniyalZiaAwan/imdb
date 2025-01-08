@@ -10,7 +10,7 @@ router.get('/producers', getAllProducers);
 // Get all actors
 router.get('/actors', getAllActors);
 
-// Get all actors
+// Create user
 router.post('/', trimMiddleware, createUser);
 
 module.exports = router;

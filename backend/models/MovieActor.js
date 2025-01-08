@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
+import sequelize from "../config/db";
 import { Movie } from "./Movie";
 import { User } from "./User";
-const sequelize = require('../config/db');
 
 export const MovieActor = sequelize.define(
     "movie_actor",

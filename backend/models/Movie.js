@@ -1,7 +1,6 @@
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db";
 import { User } from './User';
-
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
 
 export const Movie = sequelize.define(
     'movie',

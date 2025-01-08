@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import CreateUser from '../components/CreateUser';
-import { MOVIE_UPDATE_TYPE } from '../enums/MovieUpdateType';
-import { USER_TYPE } from '../enums/UserType';
 import { createMovie, fetchMovie, updateMovie } from '../redux/movieSlice';
 import { fetchAllActors, fetchAllProducers } from '../redux/userSlice';
+import { MOVIE_UPDATE_TYPE, USER_TYPE } from '../utils/enums';
 import formatDate from '../utils/formatDate';
 
 const intialUser = { name: "", bio: "", gender: "", dob: "", type: "" }
@@ -53,16 +52,14 @@ const CreateMovie = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent form default behavior
+        e.preventDefault();
 
         const data = { ...formData, actors: selectedActors }
         const navigateFunc = () => navigate(-1)
+        const payload = { data, navigate: navigateFunc }
 
-        if (mode === MOVIE_UPDATE_TYPE.CREATE) {
-            dispatch(createMovie({ data, navigate: navigateFunc }));
-        } else {
-            dispatch(updateMovie({ id, data, navigate: navigateFunc }));
-        }
+        if (mode === MOVIE_UPDATE_TYPE.CREATE) dispatch(createMovie(payload));
+        else dispatch(updateMovie({ id, ...payload }));
     };
 
     const handleActorClick = (actorId) => {

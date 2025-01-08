@@ -3,3 +3,8 @@ export const USER_TYPE = {
     ACTOR: 'actor',
     PRODUCER: 'producer',
 }
+
+export const MOVIE_UPDATE_TYPE = {
+    CREATE: 'create',
+    UPDATE: 'update',
+}

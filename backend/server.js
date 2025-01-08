@@ -5,8 +5,11 @@ import MovieActor from './models/MovieActor'
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import sequelize from "./config/db";
 
-const sequelize = require('./config/db');
+import movieRoutes from './routes/movies'
+import userRoutes from './routes/users'
+
 sequelize
   .authenticate()
   .then(() => console.log('Database connected!'))
@@ -21,8 +24,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/api/movies', require('./routes/movies'));
-app.use('/api/users', require('./routes/users'));
+app.use('/api/movies', movieRoutes);
+app.use('/api/users', userRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

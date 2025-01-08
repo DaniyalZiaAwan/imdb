@@ -1,6 +1,6 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
-const { USER_TYPE } = require('../enums/userType');
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db";
+import { USER_TYPE } from "../utils/enums";
 
 export const User = sequelize.define(
     'user',

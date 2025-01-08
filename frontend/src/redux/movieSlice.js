@@ -50,12 +50,6 @@ const movieSlice = createSlice({
       .addCase(fetchMovies.pending, (state) => {
         state.loading = true;
       })
-      .addCase(fetchMovie.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(createMovie.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(fetchMovies.fulfilled, (state, action) => {
         state.loading = false;
         state.movies = action.payload.data;
@@ -63,30 +57,17 @@ const movieSlice = createSlice({
         state.totalPages = action.payload.totalPages;
         state.error = '';
       })
+      .addCase(fetchMovies.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
       .addCase(fetchMovie.fulfilled, (state, action) => {
         state.loading = false;
         state.movie = action.payload;
         state.error = '';
       })
-      .addCase(fetchMovies.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
-      .addCase(fetchMovie.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
-      .addCase(createMovie.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = '';
-      })
-      .addCase(createMovie.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      });
   }
 });
 
 export const { setCurrentPage } = movieSlice.actions;
-
 export default movieSlice.reducer;
