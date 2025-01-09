@@ -1,5 +1,7 @@
 import { Movie } from "../models/Movie";
 import { User } from "../models/User";
+import { STATUS_CODES } from "../utils/codes";
+import { MESSAGES } from "../utils/messages";
 import schema from "../validation/movie";
 
 export const getAll = async (req, res) => {
@@ -30,7 +32,7 @@ export const getAll = async (req, res) => {
             data: movies,
         });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }
 
@@ -49,12 +51,12 @@ export const getById = async (req, res) => {
         });
 
         // send error response
-        if (!movie) return res.status(404).json('Movie not found')
+        if (!movie) return res.status(STATUS_CODES.NOT_FOUND).json(MESSAGES.NOT_FOUND('Movie'))
 
         // send success response
         return res.json(movie);
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }
 
@@ -66,7 +68,7 @@ export const create = async (req, res) => {
         let errors = schema.validate(req.body, { abortEarly: false })?.error?.details.map((err) => err.message);
 
         // send validation error response
-        if (errors?.length) return res.status(400).json(errors)
+        if (errors?.length) return res.status(STATUS_CODES.BAD_REQUEST).json(errors)
 
         // create new movie in database
         const newMovie = await Movie.create({ name, plot, poster, release_date, producer_id: producer });
@@ -75,9 +77,9 @@ export const create = async (req, res) => {
         if (newMovie && actors.length > 0) await newMovie.addActors(actors);
 
         // send success response
-        return res.status(201).json(newMovie);
+        return res.status(STATUS_CODES.CREATED).json({ message: MESSAGES.CREATED('Movie'), data: newMovie });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }
 
@@ -90,13 +92,13 @@ export const update = async (req, res) => {
         let errors = schema.validate(req.body, { abortEarly: false })?.error?.details.map((err) => err.message);
 
         // send validation error response
-        if (errors?.length) return res.status(400).json(errors)
+        if (errors?.length) return res.status(STATUS_CODES.BAD_REQUEST).json(errors)
 
         // fetch single movie from database
         const movie = await Movie.findByPk(id)
 
         // send error response
-        if (!movie) return res.status(404).json('Movie not found');
+        if (!movie) return res.status(STATUS_CODES.NOT_FOUND).json(MESSAGES.NOT_FOUND('Movie'));
 
         // update movie in database
         await movie.update({ name, plot, poster, release_date, producer_id: producer })
@@ -105,9 +107,9 @@ export const update = async (req, res) => {
         if (movie && actors.length > 0) await movie.setActors(actors);
 
         // send success response
-        return res.status(200).json('Movie updated');
+        return res.status(STATUS_CODES.OK).json({ message: MESSAGES.UPDATED('Movie') });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }
 
@@ -120,8 +122,8 @@ export const remove = async (req, res) => {
         await Movie.destroy({ where: { id } })
 
         // send success response
-        return res.status(200).json({ status: 'Deleted successfully.' });
+        return res.status(STATUS_CODES.OK).json({ message: MESSAGES.DELETED('Movie') });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }

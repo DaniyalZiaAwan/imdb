@@ -1,5 +1,7 @@
 import { User } from "../models/User";
+import { STATUS_CODES } from "../utils/codes";
 import { USER_TYPE } from "../utils/enums";
+import { MESSAGES } from "../utils/messages";
 import schema from "../validation/user";
 
 export const getAllProducers = async (req, res) => {
@@ -10,7 +12,7 @@ export const getAllProducers = async (req, res) => {
         // send success response
         return res.json(producers);
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }
 
@@ -22,7 +24,7 @@ export const getAllActors = async (req, res) => {
         // send success response
         return res.json(actors);
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }
 
@@ -34,14 +36,14 @@ export const createUser = async (req, res) => {
         let errors = schema.validate(req.body, { abortEarly: false })?.error?.details.map((err) => err.message);
 
         // send validation error response
-        if (errors?.length) return res.status(400).json(errors)
+        if (errors?.length) return res.status(STATUS_CODES.BAD_REQUEST).json(errors)
 
         // create new user in database
         const newUser = await User.create({ name, bio, gender, dob, type });
 
         // send success response
-        return res.status(201).json(newUser);
+        return res.status(STATUS_CODES.CREATED).json({ message: MESSAGES.CREATED(type), data: newUser });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
 }
