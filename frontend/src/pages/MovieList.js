@@ -62,6 +62,7 @@ const MovieList = () => {
 
       <div className="overflow-x-auto mt-4">
         {loading && <Loader />}
+        {!loading && !movies.length && <div className='text-center'>No Movies found, can add by clicking the add movie button above.</div>}
         {(!loading && movies?.length) ?
           (
             <div>
@@ -100,7 +101,7 @@ const MovieList = () => {
               </table>
               <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
             </div>
-          ) : <div className='text-center'>No Movies found, can add by clicking the add movie button above.</div>
+          ) : ''
         }
       </div>
     </div>
