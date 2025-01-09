@@ -2,31 +2,33 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import axiosInstance from '../utils/axiosInstance';
 
+const entity = 'movies'
+
 export const fetchMovies = createAsyncThunk('fetchMovies', async (page = 1) => {
-  const response = await axiosInstance.get(`movies?page=${page}`);
+  const response = await axiosInstance.get(`${entity}?page=${page}`);
   return response.data;
 });
 
 export const fetchMovie = createAsyncThunk('fetchMovie', async (id) => {
-  const response = await axiosInstance.get(`movies/${id}`);
+  const response = await axiosInstance.get(`${entity}/${id}`);
   return response.data;
 });
 
 export const createMovie = createAsyncThunk('createMovie', async ({data, navigate}) => {
-  await axiosInstance.post('/movies', data);
+  const response = await axiosInstance.post(entity, data);
   navigate()
-  toast.success('Movie created.')
+  toast.success(response.data.message)
 });
 
 export const updateMovie = createAsyncThunk('updateMovie', async ({id, data, navigate}) => {
-  await axiosInstance.put(`/movies/${id}`, data);
+  const response = await axiosInstance.put(`${entity}/${id}`, data);
   navigate()
-  toast.success('Movie updated.')
+  toast.success(response.data.message)
 });
 
 export const deleteMovie = createAsyncThunk('deleteMovie', async (id) => {
-  const response = await axiosInstance.delete(`movies/${id}`);
-  return response.data;
+  const response = await axiosInstance.delete(`${entity}/${id}`);
+  toast.success(response.data.message)
 });
 
 const movieSlice = createSlice({

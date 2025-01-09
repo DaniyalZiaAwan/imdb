@@ -17,10 +17,12 @@ const MovieList = () => {
   const { movies, status, loading, currentPage, totalPages } = useSelector((state) => state.movie);
 
   useEffect(() => {
+    // fetch paginated movies
     if (status === 'idle') dispatch(fetchMovies());
   }, [status, dispatch]);
 
   useEffect(() => {
+    // fetch movies when page changes (pagination)
     dispatch(fetchMovies(currentPage));
   }, [currentPage]);
 
@@ -29,6 +31,7 @@ const MovieList = () => {
   }
 
   const handleDelete = async () => {
+    // send API call to delete movie
     await dispatch(deleteMovie(confirmation.item.id))
     dispatch(fetchMovies());
     handleCancel()
@@ -59,7 +62,7 @@ const MovieList = () => {
 
       <div className="overflow-x-auto mt-4">
         {loading && <Loader />}
-        {!loading &&
+        {(!loading && movies?.length) ?
           (
             <div>
               <table className="min-w-full table-auto border-collapse">
@@ -97,7 +100,7 @@ const MovieList = () => {
               </table>
               <Pagination currentPage={currentPage} totalPages={totalPages} handlePageChange={handlePageChange} />
             </div>
-          )
+          ) : <div className='text-center'>No Movies found, can add by clicking the add movie button above.</div>
         }
       </div>
     </div>

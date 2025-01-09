@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000/api/', // Use environment variable for API base URL
+    baseURL: process.env.REACT_APP_API_KEY, // Use environment variable for API base URL
     headers: { 'Content-Type': 'application/json' }
 });
 
@@ -24,7 +24,7 @@ axiosInstance.interceptors.response.use(
             }
         }
 
-        return Promise.reject(error); // Reject the promise to handle it properly in the calling code
+        return Promise.reject(error);
     }
 );
 

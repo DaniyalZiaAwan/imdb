@@ -14,7 +14,7 @@ const CreateUser = ({ modalData, setModalData, user, setUser }) => {
     const handleCreateUser = async (e) => {
         e.preventDefault();
 
-        dispatch(createUser({ data: { ...user, type: modalData.type }, setModalData: () => setModalData({ open: false }) }));
+        await dispatch(createUser({ data: { ...user, type: modalData.type }, setModalData: () => setModalData({ open: false }) }));
         dispatch(modalData.type === USER_TYPE.PRODUCER ? fetchAllProducers() : fetchAllActors())
     }
 

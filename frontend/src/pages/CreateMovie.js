@@ -24,6 +24,7 @@ const CreateMovie = () => {
 
     useEffect(() => {
         if (status === 'idle') {
+            // fetch all producers & actors
             dispatch(fetchAllProducers());
             dispatch(fetchAllActors());
         }
@@ -31,6 +32,7 @@ const CreateMovie = () => {
 
     useEffect(() => {
         if (id) {
+            // set mode to edit and fetch single movie
             setMode(MOVIE_UPDATE_TYPE.UPDATE);
             dispatch(fetchMovie(id))
         } else {
@@ -41,12 +43,14 @@ const CreateMovie = () => {
     useEffect(() => {
         if (!movie || mode !== MOVIE_UPDATE_TYPE.UPDATE) return
 
+        // update form fields
         const { name, plot, poster, release_date } = movie
         setFormData({ name, plot, poster, release_date, producer: movie.producer?.id.toString(), release_date: formatDate(movie.release_date) })
         setSelectedActors(movie.actors?.map((actor) => actor.id))
     }, [movie])
 
     const handleChange = (e) => {
+        // update state when data entered in form by user
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
@@ -58,6 +62,7 @@ const CreateMovie = () => {
         const navigateFunc = () => navigate(-1)
         const payload = { data, navigate: navigateFunc }
 
+        // create or update a movie
         if (mode === MOVIE_UPDATE_TYPE.CREATE) dispatch(createMovie(payload));
         else dispatch(updateMovie({ id, ...payload }));
     };
@@ -65,6 +70,7 @@ const CreateMovie = () => {
     const handleActorClick = (actorId) => {
         const actor = selectedActors?.find((actor) => actor === actorId)
 
+        // update selected actors state
         if (actor) {
             const actors = [...selectedActors]
             actors.splice(selectedActors.indexOf(actor), 1)
@@ -75,6 +81,7 @@ const CreateMovie = () => {
     }
 
     const handleAddNewUserClick = (type) => {
+        // show modal to create new user
         if (!type) return
         setModalData({ open: true, type, title: <div>Add New <span className='capitalize'>{type}</span></div> })
         setUser(intialUser)

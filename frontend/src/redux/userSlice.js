@@ -2,20 +2,22 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import axiosInstance from '../utils/axiosInstance';
 
+const entity = 'users'
+
 export const fetchAllProducers = createAsyncThunk('fetchAllProducers', async () => {
-  const response = await axiosInstance.get('users/producers');
+  const response = await axiosInstance.get(`${entity}/producers`);
   return response.data;
 });
 
 export const fetchAllActors = createAsyncThunk('fetchAllActors', async () => {
-  const response = await axiosInstance.get('users/actors');
+  const response = await axiosInstance.get(`${entity}/actors`);
   return response.data;
 });
 
 export const createUser = createAsyncThunk('createUser', async ({ data, setModalData }) => {
-  await axiosInstance.post('/users', data);
+  const response = await axiosInstance.post(entity, data);
   setModalData()
-  toast.success(`${data.type} created.`)
+  toast.success(response.data.message)
 });
 
 const userSlice = createSlice({
@@ -30,12 +32,6 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllProducers.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchAllActors.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(fetchAllProducers.fulfilled, (state, action) => {
         state.loading = false;
         state.producers = action.payload;
@@ -45,25 +41,6 @@ const userSlice = createSlice({
         state.loading = false;
         state.actors = action.payload;
         state.error = '';
-      })
-      .addCase(fetchAllProducers.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
-      .addCase(fetchAllActors.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      })
-      .addCase(createUser.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(createUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = '';
-      })
-      .addCase(createUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message; 
       });
   }
 });
