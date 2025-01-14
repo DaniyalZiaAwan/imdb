@@ -7,3 +7,13 @@ export const trimMiddleware = (req, res, next) => {
 
   next();
 };
+
+export const trimQueryMiddleware = (req, res, next) => {
+  for (const key in req.query) {
+    if (typeof req.query[key] === 'string') {
+      req.query[key] = req.query[key].trim();
+    }
+  }
+  
+  next();
+};

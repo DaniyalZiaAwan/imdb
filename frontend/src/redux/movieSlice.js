@@ -4,8 +4,8 @@ import axiosInstance from '../utils/axiosInstance';
 
 const entity = 'movies'
 
-export const fetchMovies = createAsyncThunk('fetchMovies', async (page = 1) => {
-  const response = await axiosInstance.get(`${entity}?page=${page}`);
+export const fetchMovies = createAsyncThunk('fetchMovies', async ({ page = 1, name = '', producer = '' }) => {
+  const response = await axiosInstance.get(`${entity}?page=${page}&name=${name}&producer=${producer}`);
   return response.data;
 });
 
@@ -52,16 +52,15 @@ const movieSlice = createSlice({
       .addCase(fetchMovies.pending, (state) => {
         state.loading = true;
       })
+      .addCase(fetchMovie.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(fetchMovies.fulfilled, (state, action) => {
         state.loading = false;
         state.movies = action.payload.data;
         state.currentPage = action.payload.currentPage;
         state.totalPages = action.payload.totalPages;
         state.error = '';
-      })
-      .addCase(fetchMovies.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
       })
       .addCase(fetchMovie.fulfilled, (state, action) => {
         state.loading = false;

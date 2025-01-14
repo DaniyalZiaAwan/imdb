@@ -1,11 +1,11 @@
 import express from "express";
 import { create, getAll, getById, remove, update } from "../controllers/movies";
-import { trimMiddleware } from "../middleware/trim";
+import { trimMiddleware, trimQueryMiddleware } from "../middleware/trim";
 
 const router = express.Router();
 
 // Get all movies
-router.get('/', getAll);
+router.get('/', trimQueryMiddleware, getAll);
 
 // Get single movie
 router.get('/:id', getById);

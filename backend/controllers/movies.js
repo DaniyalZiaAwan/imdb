@@ -1,3 +1,4 @@
+import { literal, Op } from "sequelize";
 import { Movie } from "../models/Movie";
 import { User } from "../models/User";
 import { STATUS_CODES } from "../utils/codes";
@@ -5,14 +6,22 @@ import { MESSAGES } from "../utils/messages";
 import schema from "../validation/movie";
 
 export const getAll = async (req, res) => {
-    const { page = 1, limit = 5 } = req.query;
+    const { page = 1, limit = 5, name, producer } = req.query;
     const offset = (page - 1) * limit;
 
     try {
         const attributes = ['id', 'name']
 
+        // movie filter object
+        const $where = {}
+        if (name) $where.name = { [Op.like]: `%${name}%` }
+        if (producer) $where.producer_id = producer
+
         // fetch movies from database
         const { count, rows: movies } = await Movie.findAndCountAll({
+            // filtering
+            where: $where,
+
             include: [
                 { model: User, as: 'actors', attributes, through: { attributes: [] } },
                 { model: User, as: 'producer', attributes }

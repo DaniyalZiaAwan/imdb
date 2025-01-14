@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import CreateMovie from './pages/CreateMovie';
 import MovieList from './pages/MovieList';
 import NotFound from './pages/NotFound';
+import SingleMovie from './pages/SingleMovie';
 
 const AppRoutes = () => {
   return (
@@ -10,6 +11,7 @@ const AppRoutes = () => {
       <Route path='/' element={<MovieList />} />
       <Route path='/create' element={<CreateMovie />} />
       <Route path='/edit/:id' element={<CreateMovie />} />
+      <Route path='/movie/:id' element={<SingleMovie />} />
 
       {/* NOT FOUND PAGE */}
       <Route path="*" element={<NotFound />} />
